@@ -1,0 +1,20 @@
+{
+  "name": "todo-list-wsb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jaziuu/todo-list-wsb.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jaziuu/todo-list-wsb/issues"
+  },
+  "homepage": "https://github.com/Jaziuu/todo-list-wsb#readme"
+}
