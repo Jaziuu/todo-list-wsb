@@ -3,26 +3,27 @@ function LoggingFilter() {
         console.log(requestOptions);
         next(requestOptions, (returnObject, finalCallback, next) => {
             console.log(returnObject);
-        });
-    };
+        })
+    }
 }
 
-const uuid = require("uuid");
-const storage = require("azure-storage");
+const storage = require('azure-storage')
+const uuid = require('uuid')
 const retryOperation = new storage.LinearRetryPolicyFilter();
 const loggingOperation = new LoggingFilter();
-const service = storage
-    .createTableService()
+const service = storage.createTableService()
     .withFilter(loggingOperation)
-    .withFilter(retryOperation);
+    .withFilter(retryOperation)
+const table = 'tasks'
 
-const table = "tasks";
-const init = async () =>
+
+const init = async () => (
     new Promise((resolve, reject) => {
         service.createTableIfNotExists(table, (error, result, response) => {
-            !error ? resolve() : reject();
-        });
-    });
+            !error ? resolve() : reject()
+        })
+    })
+)
 
 const addTask = async ({
     title,
@@ -39,16 +40,31 @@ const addTask = async ({
         }
         console.log('addtask - task')
         service.insertEntity(table, task, (error) => {
-            !error ? resolve() : reject()
             if (error) {
                 console.log(error);
-            }
+            }!error ? resolve() : reject()
         })
         console.log('addtask - insertEntity')
     }), console.log('addtask - Promise')
 )
 
+
+const listTasks = async () => (
+    new Promise((resolve, reject) => {
+        const query = new storage.TableQuery()
+            .select(['title'])
+            .where('PartitionKey eq ?', 'task')
+
+        service.queryEntities(table, query, null, (error, result) => {
+            !error ? resolve(result.entries.map((entry) => ({
+                title: entry.title._
+            }))) : reject()
+        })
+    })
+)
+
 module.exports = {
     init,
-    addTask
-};
+    addTask,
+    listTasks
+}
