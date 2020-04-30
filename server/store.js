@@ -1,5 +1,3 @@
-const uuid = require("uuid");
-
 function LoggingFilter() {
     this.handle = (requestOptions, next) => {
         console.log(requestOptions);
@@ -9,6 +7,7 @@ function LoggingFilter() {
     };
 }
 
+const uuid = require("uuid");
 const storage = require("azure-storage");
 const retryOperation = new storage.LinearRetryPolicyFilter();
 const loggingOperation = new LoggingFilter();
@@ -26,7 +25,8 @@ const init = async () =>
     });
 
 const addTask = async ({
-    title
+    title,
+    description
 }) => (
     new Promise((resolve, reject) => {
         const gen = storage.TableUtilities.entityGenerator
@@ -34,7 +34,8 @@ const addTask = async ({
         const task = {
             PartitionKey: gen.String('task'),
             RowKey: gen.String(uuid.v4()),
-            title
+            title,
+            description
         }
         console.log('addtask - task')
         service.insertEntity(table, task, (error) => {
