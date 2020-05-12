@@ -13,8 +13,8 @@ const retryOperation = new storage.LinearRetryPolicyFilter();
 const loggingOperation = new LoggingFilter();
 const service = storage
   .createTableService()
-  .withFilter(loggingOperation)
-  .withFilter(retryOperation);
+// .withFilter(loggingOperation)
+// .withFilter(retryOperation);
 const table = "tasks";
 
 const init = async () =>
@@ -24,7 +24,10 @@ const init = async () =>
     });
   });
 
-const addTask = async ({ title, description }) => (
+const addTask = async ({
+  title,
+  description
+}) => (
   new Promise((resolve, reject) => {
     const gen = storage.TableUtilities.entityGenerator;
     console.log("addtask - gen");
@@ -38,8 +41,7 @@ const addTask = async ({ title, description }) => (
     service.insertEntity(table, task, (error) => {
       if (error) {
         console.log(error);
-      }
-      !error ? resolve() : reject();
+      }!error ? resolve() : reject();
     });
     console.log("addtask - insertEntity");
   }),
@@ -54,14 +56,15 @@ const listTasks = async () =>
 
     service.queryEntities(table, query, null, (error, result) => {
       !error
-        ? resolve(
-            result.entries.map((entry) => ({
-              title: entry.title._,
-              description: entry.description._,
-              Timestamp: entry.Timestamp._,
-            }))
-          )
-        : reject();
+        ?
+        resolve(
+          result.entries.map((entry) => ({
+            title: entry.title._,
+            description: entry.description._,
+            Timestamp: entry.Timestamp._,
+          }))
+        ) :
+        reject();
     });
   });
 

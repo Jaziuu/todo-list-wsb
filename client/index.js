@@ -7,6 +7,25 @@ const addTaskDescription = document.querySelector('#addTaskForm #description')
 const tasksList = document.querySelector('#tasksList')
 const tasksListMsg = document.querySelector('#tasksListMsg')
 
+const addTask = async () => {
+    const data = new FormData(addTaskForm)
+
+    const headers = new Headers({
+        'Content-Type': 'application/json; charset=utf-8'
+    })
+
+    const body = JSON.stringify({
+        title: data.get('title'),
+        description: data.get('description')
+    })
+
+    return await fetch('/api/tasks', {
+        method: 'POST',
+        headers,
+        body
+    })
+}
+
 const listTasks = async () => {
     tasksList.innerHTML = ''
     tasksListMsg.classList.remove('is-danger')
@@ -48,27 +67,6 @@ const listTasks = async () => {
 
 
 
-const addTask = async () => {
-    const data = new FormData(addTaskForm)
-
-    const headers = new Headers({
-        'Content-Type': 'application/json; charset=utf-8'
-    })
-
-    const body = JSON.stringify({
-        title: data.get('title'),
-        description: data.get('description')
-    })
-
-    return await fetch('/api/tasks', {
-        method: 'POST',
-        headers,
-        body
-    })
-}
-
-
-
 addTaskForm.addEventListener('submit', (event) => {
     event.preventDefault()
 
@@ -103,4 +101,5 @@ addTaskForm.addEventListener('submit', (event) => {
             })
     }, 1000)
 })
+
 listTasks()
